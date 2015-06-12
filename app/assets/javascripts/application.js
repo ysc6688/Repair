@@ -14,4 +14,7 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require turbolinks
-//= require_tree .
+
+//= require yeti/loader
+//= require yeti/bootswatch
+//= require sweet-alert

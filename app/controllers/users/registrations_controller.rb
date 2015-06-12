@@ -10,7 +10,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #POST /resource
   def create
     user_hash =  params[:user]
-    user_hash[:role] = "stu"
+    user_hash[:role] = "student"
     user_hash[:email] = user_hash[:username]
     params[:user] = user_hash
 

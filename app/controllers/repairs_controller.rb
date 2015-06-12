@@ -1,2 +1,0 @@
-class RepairsController < ApplicationController
-end

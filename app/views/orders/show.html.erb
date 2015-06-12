@@ -1,0 +1,45 @@
+<% if notice == "报修单创建成功" %>
+<strong><%= notice %></strong>
+<% end %>
+
+<p>
+    <strong>标题:</strong>
+    <%= @order.title %>
+</p>
+
+<p>
+    <strong>提交人:</strong>
+    <%= @order.persion %>
+</p>
+
+<p>
+    <strong>联系电话:</strong>
+    <%= @order.phone %>
+</p>
+
+<p>
+    <strong>email:</strong>
+    <%= @order.email %>
+</p>
+
+<p>
+    <strong>故障类型:</strong>
+    <% if @order.org == "网络中心" %>
+        <%= '校园网络故障' %>
+    <% elsif @order.org == "教务处" %>
+        <%= '综合教务系统故障和教学设备故障' %>
+    <% elsif @order.org == "后勤部门" %>
+        <%= '热水工程设备问题' %>
+    <% elsif @order.org == "人事部门" %>
+        <%= '人事考核系统问题' %>
+    <% else %>
+        <%= '财务信息系统问题' %>
+    <% end %>
+</p>
+
+<p>
+    <strong>问题描述:</strong>
+    <%= @order.text %>
+</p>
+
+<%= link_to '返回', orders_path %>

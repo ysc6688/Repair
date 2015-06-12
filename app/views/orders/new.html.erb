@@ -1,0 +1,42 @@
+<div class="mybox">
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4><%= t('.create_order', :default => "报修单创建") %></h4>
+  </div>
+  <div class="panel-body">
+    <%= form_for :order, url: '/orders' do |f| %>
+      <div class="form-group">
+        <%= f.label :title, '标题' %>
+        <%= f.text_field :title, autofocus: true, required: true, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :persion, '姓名' %>
+        <%= f.text_field :persion, required: true, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :phone, '电话' %>
+        <%= f.text_field :phone, required: true, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :email %>
+        <%= f.email_field :email, required: true, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :org, '故障类型' %></br>
+        <%= f.select(:org, [
+            ['校园网络故障','网络中心'],
+            ['综合教务系统故障和教学设备故障','教务处'],
+            ['热水工程设备问题','后勤部门'],
+            ['人事考核系统问题','人事部门'],
+            ['财务信息系统问题','财务处']
+        ], {}, {:class => "form-control"}) %>
+      </div>
+      <div class="form-group">
+        <%= f.label :text, '问题描述' %>
+        <%= f.text_area :text, required: true, class: "form-control" %>
+      </div>
+      <%= f.submit t('.create_order', :default => " 创  建 "), class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>
+</div>

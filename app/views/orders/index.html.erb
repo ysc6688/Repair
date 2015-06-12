@@ -1,0 +1,236 @@
+<style>
+  .table th, .table td { 
+    text-align: center; 
+  }
+</style>
+<script type="text/javascript">
+function Alloc(id,sel)
+{
+swal({   title: "确定要指派吗?",
+         text: "一旦指定就无法取消操作!",
+         type: "warning",   
+         showCancelButton: true,
+         confirmButtonColor: "#DD6B55",
+         confirmButtonText: "确 定",
+         cancelButtonText: "取 消",
+         closeOnConfirm: false,
+         closeOnCancel: false }, 
+         function(isConfirm){
+            if (isConfirm) {
+                $.post('/order/alloc',
+                    {
+                        orderid:id,
+                        rp:sel.value
+                    },
+                    function (data,status) {
+                        if(data.msg == "指派维修员成功!")
+                            swal({
+                                title: "分配成功!",
+                                text: data.msg,
+                                type: "success",
+                                showCancelButton: false
+                                },
+                                function() {
+                                    window.location.href='/';
+                                });
+                        else
+                            swal("分配失败!", data.msg, "error");
+                    },
+                    'json'
+                );
+            }
+            else {
+                sel.value = -1;
+                swal("操作已取消!", "该操作没有产生影响", "error");
+            } 
+    });
+}
+
+function Circle(id,sel)
+{
+swal({   title: "确定要流转到"+sel.value+"吗?",
+         text: "一旦指定就无法取消操作!",
+         type: "warning",   
+         showCancelButton: true,
+         confirmButtonColor: "#DD6B55",
+         confirmButtonText: "确 定",
+         cancelButtonText: "取 消",
+         closeOnConfirm: false,
+         closeOnCancel: false }, 
+         function(isConfirm){
+            if (isConfirm) {
+                $.post('/order/circle',
+                    {
+                        orderid:id,
+                        org:sel.value
+                    },
+                    function (data,status) {
+                        if(data.msg == "流转成功!")
+                            swal({
+                                title: "流转成功!",
+                                text: "流转到"+sel.value+"成功!",
+                                type: "success",
+                                showCancelButton: false
+                                },
+                                function() {
+                                    window.location.href='/';
+                                });
+                        else
+                            swal("流转失败!", data.msg, "error");
+                    },
+                    'json'
+                );
+            }
+            else {
+                sel.value = -1;
+                swal("操作已取消!", "该操作没有产生影响", "error");
+            } 
+    });
+}
+</script>
+<h1>校园报修系统</h1>
+<% if user_signed_in? %>
+
+  <% if current_user.role == 'student' %>
+    您好, <%= current_user.username %>! 您是 <%= current_user.role %> 用户
+  <%= link_to('登出', destroy_user_session_path, :method => :delete) %>
+  <%= link_to('修改密码', edit_user_registration_path, :method => :get) %>
+  <%= link_to('创建报修单', new_order_path, :method => :get) %>
+
+  <% if @orders.size > 0 %>
+  <div class="panel panel-default">
+    <div class="panel-heading">您的报修单</div>
+    <table class="table">
+      <tr>
+        <th>#</th>
+        <th>标题</th>
+        <th>创建时间</th>
+        <th>状态</th>
+        <th>更新时间</th>
+      </tr>
+    <% @orders.each_with_index do |order,index| %>
+      <tr>
+        <td style="vertical-align:middle"><%= index+1 %></td>
+        <td><%= link_to order.title, order_path(order.id) %></td>
+        <td><%= order.created_at %></td>
+        <td><%= order.status %></td>
+        <td><%= order.updated_at %></td>
+      </tr>
+    <% end %>
+    </table>
+  </div>
+  </div>
+    <% elsif %>
+        <p>你还没有报修单</p>
+    <% end %>
+  </div>
+  <% elsif current_user.role == 'manager' %>
+      您好, <%= current_user.username %>! 您是 <%= current_user.role %> 用户, 您所在的部门是<%= current_user.org =%>
+  <%= link_to('登出', destroy_user_session_path, :method => :delete) %>
+  <%= link_to('修改密码', edit_user_registration_path, :method => :get) %>
+  <% if @orders.size != 0 %>
+  <div class="panel panel-default">
+    <div class="panel-heading">新提交报修单</div>
+    <table class="table">
+      <tr>
+        <th>#</th>
+        <th>标题</th>
+        <th>创建时间</th>
+        <th>分配维修员</th>
+      </tr>
+    <% @orders.each_with_index do |order,index| %>
+      <tr>
+        <td style="vertical-align:middle"><%= index+1 %></td>
+        <td style="vertical-align:middle"><%= link_to order.title, order_path(order.id) %></td>
+        <td style="vertical-align:middle"><%= order.created_at %></td>
+        <td>
+            <select class="form-control" id="alloc" onchange="if (this.selectedIndex) Alloc(<%= order.id %>,this);">
+                <option value="-1">请选择</option>
+                <% @repairmans.each do |rp| %>
+                    <option value="<%=rp.username%>"><%= rp.username %></option>
+                <% end %>
+            </select>
+        </td>
+      </tr>
+    <% end %>
+    </table>
+  </div>
+  </div>
+  <% else %>
+      <p>目前还没有报修单</p>
+  <% end %>
+  <% elsif current_user.role == 'root' %>
+      您好, <%= current_user.username %>! 您是 <%= current_user.role %> 用户
+  <%= link_to('登出', destroy_user_session_path, :method => :delete) %>
+      <%= link_to '分配新账户', 'admin/new', :method => :get %>
+  <div class="panel panel-default">
+    <div class="panel-heading">管理员及维修员账户</div>
+    <table class="table">
+      <tr>
+        <th>#</th>
+        <th>用户名</th>
+        <th>创建时间</th>
+        <th>身份</th>
+        <th>部门</th>
+        <th>最近登录时间</th>
+        <th>操作</th>
+      </tr>
+    <% @users.each_with_index do |user,index| %>
+      <tr>
+        <td style="vertical-align:middle"><%= index+1 %></td>
+        <td><%= user.username %></td>
+        <td><%= user.created_at %></td>
+        <td><%= user.role %></td>
+        <td><%= user.org %></td>
+        <td><%= user.current_sign_in_at %>
+        <td><%= link_to '编辑', :controller => 'admin',
+            :action => 'edit', :name => user.username %>
+        <%= link_to '删除', admin_destroy_path(:name => user.username), :method => :delete, data: {confirm: '确定要删除吗?' }%></td>
+      </tr>
+    <% end %>
+    </table>
+    </div>
+  </div>
+  <% else %>
+      您好, <%= current_user.username %>! 您是 <%= current_user.role %> 用户, 您所在的部门是 <%= current_user.org =%>
+  <%= link_to('登出', destroy_user_session_path, :method => :delete) %>
+    <% if @orders.size == 0 %>
+        <p>目前还没有要处理的报修单</p>
+    <% else %>
+    <div class="panel panel-default">
+    <div class="panel-heading">新分配报修单</div>
+    <table class="table">
+      <tr>
+        <th>#</th>
+        <th>标题</th>
+        <th>创建时间</th>
+        <th>操作</th>
+        <th>流转到其他部门</th>
+      </tr>
+    <% @orders.each_with_index do |order, index| %>
+      <tr>
+        <td style="vertical-align:middle"><%= index+1 %></td>
+        <td style="vertical-align:middle"><%= link_to order.title, order_path(order.id) %></td>
+        <td style="vertical-align:middle"><%= order.created_at %></td>
+        <td style="vertical-align:middle"><%= link_to '提交意见', order_suggest_path(order.id), class: "btn btn-primary" %></td>
+        <td>
+            <select class="form-control" id="circle" onchange="if (this.selectedIndex) Circle(<%= order.id %>,this);">
+                <option value="-1">请选择</option>
+                <% org = ['网络中心','教务处','后勤部门','人事部门','财务处'] %>
+                <% org.each do |o| %>
+                    <% if o != order.org %>
+                        <option value="<%=o %>"><%= o %></option>
+                    <% end %>
+                <% end %>
+            </select>
+        </td>
+      </tr>
+    <% end %>
+    </table>
+    </div>
+    </div>
+
+
+    <% end %>
+  <% end %>
+<% end %>

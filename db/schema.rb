@@ -11,7 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150606131557) do
+ActiveRecord::Schema.define(version: 20150609073048) do
+
+  create_table "orders", force: :cascade do |t|
+    t.string   "title"
+    t.string   "persion"
+    t.string   "phone"
+    t.string   "email"
+    t.text     "text"
+    t.string   "repairman"
+    t.string   "suggestion"
+    t.string   "status"
+    t.string   "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "provider"
+    t.string   "org"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "encrypted_password",     default: "", null: false
@@ -28,6 +44,7 @@ ActiveRecord::Schema.define(version: 20150606131557) do
     t.string   "username"
     t.string   "role"
     t.string   "email"
+    t.string   "org"
   end
 
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
