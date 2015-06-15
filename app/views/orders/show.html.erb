@@ -1,45 +1,78 @@
 <% if notice == "报修单创建成功" %>
-<strong><%= notice %></strong>
+    <div class="alert alert-success" role="alert"><%= notice %></div>
 <% end %>
 
-<p>
-    <strong>标题:</strong>
-    <%= @order.title %>
-</p>
+<div class="bigbox">
+    <div class="panel panel-default">
+            <div class="alert alert-info" role="alert">报修单详情</div>
+    <table class="table">
+        <tr>
+          <td>
+            <strong>&nbsp;标&nbsp;&nbsp;题&nbsp;:</strong>
+          </td>
+          <td>
+            <%= @order.title %>
+          </td>
 
-<p>
-    <strong>提交人:</strong>
-    <%= @order.persion %>
-</p>
+          <td>
+            <strong>提交人:</strong>
+          </td>
+          <td>
+            <%= @order.persion %>
+          </td>
+        </tr>
 
-<p>
-    <strong>联系电话:</strong>
-    <%= @order.phone %>
-</p>
+        <tr>
+          <td>
+            <strong>联系电话:</strong>
+          </td>
+          <td>
+            <%= @order.phone %>
+          </td>
 
-<p>
-    <strong>email:</strong>
-    <%= @order.email %>
-</p>
+          <td>
+            <strong>email:</strong>
+          </td>
+          <td>
+            <%= @order.email %>
+          </td>
+        </tr>
 
-<p>
-    <strong>故障类型:</strong>
-    <% if @order.org == "网络中心" %>
-        <%= '校园网络故障' %>
-    <% elsif @order.org == "教务处" %>
-        <%= '综合教务系统故障和教学设备故障' %>
-    <% elsif @order.org == "后勤部门" %>
-        <%= '热水工程设备问题' %>
-    <% elsif @order.org == "人事部门" %>
-        <%= '人事考核系统问题' %>
-    <% else %>
-        <%= '财务信息系统问题' %>
-    <% end %>
-</p>
+        <tr>
+          <td>
+            <strong>故障类型:</strong>
+          </td>
+          <td>
+            <% if @order.org == "网络中心" %>
+                <%= '校园网络故障' %>
+            <% elsif @order.org == "教务处" %>
+                <%= '综合教务系统故障和教学设备故障' %>
+            <% elsif @order.org == "后勤部门" %>
+                <%= '热水工程设备问题' %>
+            <% elsif @order.org == "人事部门" %>
+                <%= '人事考核系统问题' %>
+            <% else %>
+                <%= '财务信息系统问题' %>
+            <% end %>
+          </td>
+          <td>
+            <strong>故障位置:</strong>
+          </td>
+          <td>
+            <%= @order.position %>
+          </td>
+        </tr>
 
-<p>
-    <strong>问题描述:</strong>
-    <%= @order.text %>
-</p>
+        <tr>
+          <td>
+            <strong>问题描述:</strong>
+          </td>
+          <td colspan="3">
+            <%= @order.text %>
+          </td>
+        </tr>
+    </table>
+    </div>
 
-<%= link_to '返回', orders_path %>
+<%= link_to '返回', orders_path, class: "btn btn-primary" %>
+</div>

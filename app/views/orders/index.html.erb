@@ -97,9 +97,10 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
   <%= link_to('修改密码', edit_user_registration_path, :method => :get) %>
   <%= link_to('创建报修单', new_order_path, :method => :get) %>
 
+<div class="bigbox">
   <% if @orders.size > 0 %>
   <div class="panel panel-default">
-    <div class="panel-heading">您的报修单</div>
+    <div class="alert alert-info" role="alert">您的报修单</div>
     <table class="table">
       <tr>
         <th>#</th>
@@ -121,16 +122,18 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
   </div>
   </div>
     <% elsif %>
-        <p>你还没有报修单</p>
+    <div class="alert alert-warning" role="alert">您还没有报修单</div>
     <% end %>
+  </div>
   </div>
   <% elsif current_user.role == 'manager' %>
       您好, <%= current_user.username %>! 您是 <%= current_user.role %> 用户, 您所在的部门是<%= current_user.org =%>
   <%= link_to('登出', destroy_user_session_path, :method => :delete) %>
   <%= link_to('修改密码', edit_user_registration_path, :method => :get) %>
+  <div class="bigbox">
   <% if @orders.size != 0 %>
   <div class="panel panel-default">
-    <div class="panel-heading">新提交报修单</div>
+    <div class="alert alert-info" role="alert">新提交的报修单</div>
     <table class="table">
       <tr>
         <th>#</th>
@@ -144,7 +147,7 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
         <td style="vertical-align:middle"><%= link_to order.title, order_path(order.id) %></td>
         <td style="vertical-align:middle"><%= order.created_at %></td>
         <td>
-            <select class="form-control" id="alloc" onchange="if (this.selectedIndex) Alloc(<%= order.id %>,this);">
+            <select class="form-control input-sm" id="alloc" onchange="if (this.selectedIndex) Alloc(<%= order.id %>,this);">
                 <option value="-1">请选择</option>
                 <% @repairmans.each do |rp| %>
                     <option value="<%=rp.username%>"><%= rp.username %></option>
@@ -157,14 +160,16 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
   </div>
   </div>
   <% else %>
-      <p>目前还没有报修单</p>
+    <div class="alert alert-warning" role="alert">目前还没有报修单</div>
   <% end %>
+  </div>
   <% elsif current_user.role == 'root' %>
       您好, <%= current_user.username %>! 您是 <%= current_user.role %> 用户
   <%= link_to('登出', destroy_user_session_path, :method => :delete) %>
       <%= link_to '分配新账户', 'admin/new', :method => :get %>
+  <div class="bigbox">
   <div class="panel panel-default">
-    <div class="panel-heading">管理员及维修员账户</div>
+    <div class="alert alert-info" role="alert">管理员及维修员</div>
     <table class="table">
       <tr>
         <th>#</th>
@@ -191,14 +196,16 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
     </table>
     </div>
   </div>
+  </div>
   <% else %>
       您好, <%= current_user.username %>! 您是 <%= current_user.role %> 用户, 您所在的部门是 <%= current_user.org =%>
   <%= link_to('登出', destroy_user_session_path, :method => :delete) %>
+  <div class="bigbox">
     <% if @orders.size == 0 %>
-        <p>目前还没有要处理的报修单</p>
+    <div class="alert alert-warning" role="alert">目前还没有要处理的报修单</div>
     <% else %>
     <div class="panel panel-default">
-    <div class="panel-heading">新分配报修单</div>
+        <div class="alert alert-info" role="alert">新分配的报修单</div>
     <table class="table">
       <tr>
         <th>#</th>
@@ -212,9 +219,9 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
         <td style="vertical-align:middle"><%= index+1 %></td>
         <td style="vertical-align:middle"><%= link_to order.title, order_path(order.id) %></td>
         <td style="vertical-align:middle"><%= order.created_at %></td>
-        <td style="vertical-align:middle"><%= link_to '提交意见', order_suggest_path(order.id), class: "btn btn-primary" %></td>
+        <td style="vertical-align:middle"><%= link_to '提交意见', order_suggest_path(order.id), class: "btn btn-primary btn-sm" %></td>
         <td>
-            <select class="form-control" id="circle" onchange="if (this.selectedIndex) Circle(<%= order.id %>,this);">
+            <select class="form-control input-sm" id="circle" onchange="if (this.selectedIndex) Circle(<%= order.id %>,this);">
                 <option value="-1">请选择</option>
                 <% org = ['网络中心','教务处','后勤部门','人事部门','财务处'] %>
                 <% org.each do |o| %>
@@ -229,7 +236,7 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
     </table>
     </div>
     </div>
-
+    </div>
 
     <% end %>
   <% end %>
