@@ -1,7 +1,7 @@
-<p><%= t('.greeting', :recipient => @resource.email, :default => "Hello #{@resource.email}!") %></p>
+<p><%= t('.greeting', :recipient => @resource.email, :default => "您好 #{@resource.email}!") %></p>
 
-<p><%= t('.message', :default => "Your account has been locked due to an excessive amount of unsuccessful sign in attempts.") %></p>
+<p><%= t('.message', :default => "您的账户由于登录失败次数超过限制，您的账户将被冻结.") %></p>
 
-<p><%= t('.instruction', :default => "Click the link below to unlock your account:") %></p>
+<p><%= t('.instruction', :default => "点击下方链接来解除冻结:") %></p>
 
-<p><%= link_to t('.action', :default => "Unlock my account"), unlock_url(@resource, :unlock_token => @resource.unlock_token, locale: I18n.locale) %></p>
+<p><%= link_to t('.action', :default => "解除账户冻结"), unlock_url(@resource, :unlock_token => @resource.unlock_token, locale: I18n.locale) %></p>

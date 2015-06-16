@@ -8,20 +8,20 @@
 <% end %>
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h4><%= t('.manager_edit', :default => "Edit User") %></h4>
+    <h4><%= t('.manager_edit', :default => "编辑账户") %></h4>
   </div>
   <div class="panel-body">
     <%= form_for :admin, url: 'edit' do |f| %>
       <div class="form-group">
-        <%= f.label :username %>
+        <%= f.label :username,'用户名' %>
         <%= f.text_field :username, required: true, value: @admin.username, readonly: true, class: "form-control" %>
       </div>
       <div class="form-group">
-        <%= f.label :password %>
+        <%= f.label :password, '新密码' %>
         <%= f.password_field :password, autofocus: true, required: true  , class: "form-control" %>
       </div>
       <div class="form-group">
-        <%= f.label :password_confirmation %>
+        <%= f.label :password_confirmation, '确认新密码' %>
         <%= f.password_field :password_confirmation, required: true  , class: "form-control" %>
       </div>
       <%= f.submit t('.update', :default => "提交"), class: "btn btn-primary" %>
