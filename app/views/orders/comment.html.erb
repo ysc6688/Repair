@@ -10,17 +10,17 @@
         <div class="alert alert-info" role="alert" style="margin-bottom:2px">报修单详情</div>
     <table class="table">
         <tr>
-          <td>
+          <td width="20%">
             <strong>&nbsp;标&nbsp;&nbsp;题&nbsp;:</strong>
           </td>
-          <td>
+          <td width="30%">
             <%= @order.title %>
           </td>
 
-          <td>
+          <td width="20%">
             <strong>提交人:</strong>
           </td>
-          <td>
+          <td width="30">
             <%= @order.persion %>
           </td>
         </tr>
@@ -42,7 +42,7 @@
         </tr>
 
         <tr>
-          <td>
+            <td>
             <strong>故障类型:</strong>
           </td>
           <td>
@@ -77,13 +77,47 @@
     </table>
     </div>
 
-      <div class="alert alert-info" style="margin-bottom:2px" role="alert">维修意见:</div>
-        <%= form_for :order, url: order_path(@order), method: 'patch' do |f| %>
-      <div class="form-group">
-        <%= f.text_area :suggestion, autofocus: true, required: true, class: "form-control" %>
-      </div>
+    <% if @order.status != "已提交" %>
+    <div class="panel panel-default">
+      <div class="alert alert-info" style="margin-bottom:2px" role="alert">维修情况:</div>
+      <table class="table">
+        <tr>
+          <td width="20%">
+            <strong>&nbsp;状&nbsp;&nbsp;态&nbsp;:</strong>
+          </td>
+          <td width="30%">
+            <%= @order.status %>
+          </td>
 
-    <%= f.submit t('.suggest', :default => " 提  交 "), class: "btn btn-primary" %> &nbsp;&nbsp;&nbsp;
-    <%= link_to ' 返  回 ', orders_path, class: "btn btn-primary" %>
-    <%end %>
+          <td width="20%">
+            <strong>维修员:</strong>
+          </td>
+          <td width="30%">
+            <%= @order.repairman %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>维修建议:</strong>
+          </td>
+          <td colspan="3">
+            <%= @order.suggestion %>
+          </td>
+        </tr>
+    </table>
+    </div>
+    <% end %>
+
+    <% if @order.status == "已处理" %>
+      <div class="alert alert-info" style="margin-bottom:2px" role="alert">总体评价:</div>
+      <%= form_for :order, url: order_update_comment_path(@order), method: 'patch' do |f| %>
+      <div class="form-group">
+          <div id="star"></div>
+        <%= f.text_field :score, id:'score', hidden:true %>
+      </div>
+      <%= f.submit t('.comment', :default => " 提  交 "), class: "btn btn-primary" %> &nbsp;&nbsp;&nbsp;
+<%= link_to '返  回', orders_path, class: "btn btn-primary" %>
+      <% end %>
+    <% end %>
+
 </div>

@@ -24,6 +24,9 @@ Rails.application.routes.draw do
   post 'order/circle' => 'orders#circle'
 
   get 'order/:id/suggest' => 'orders#suggest', :as => "order_suggest"
+  get 'order/:id/comment' => 'orders#comment', :as => "order_comment"
+  patch 'order/:id/update_comment' => 'orders#update_comment', :as => "order_update_comment"
+  
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

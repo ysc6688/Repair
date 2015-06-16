@@ -22,7 +22,7 @@
         }
         .bigbox{
             margin: 0px auto;
-            width: 800px;
+            width: 70%;
             margin-top: 50px;
         }
     </style>
@@ -48,22 +48,35 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
+            <% if user_signed_in? %>
+                <% if current_user.role == 'student' %>
+                    <li><%= link_to('修改密码', edit_user_registration_path, :method => :get) %></li>
+                    <li><%= link_to('创建报修单', new_order_path, :method => :get) %></li>
+                <% elsif current_user.role == 'manager' %>
+                    <li><%= link_to('修改密码', edit_user_registration_path, :method => :get) %></li>
+                <% elsif current_user.role == 'root' %>
+                    <li><%= link_to '分配新账户', 'admin/new', :method => :get %></li>
+                <% else %>
+                    <li><%= link_to('修改密码', edit_user_registration_path, :method => :get) %></li>
+                <% end %>
+            <% else %>
             <li class="active"><a href="#">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
+            <% end %>
           </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <% if user_signed_in? %>
+                <li><a>hello!&nbsp;<%= current_user.username %></a></li>
+                <li><a>role:&nbsp;<%= current_user.role %></a></li>
+                <% if current_user.org != nil%>
+                <li><a>org:<%= current_user.org %></a><li>
+                <% end %>
+                <li><%= link_to('登出', destroy_user_session_path, :method => :delete) %></li>
+            <% else %>
+                <li><a>您还没有登录，请登录</a></li>
+            <% end %>
+        </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
@@ -74,7 +87,24 @@
     <!-- Javascripts
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <%= javascript_include_tag "yeti" %>
+    <%= javascript_include_tag "yeti", "application" %>
     <%= yield(:page_javascript) if content_for?(:page_javascript) %>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#star').raty({
+                path: '/assets',
+                click: function(score, evt) {
+                         $("#score").val(score);
+                       }
+            });
+            $('#show_star').raty({
+                path: '/assets',
+                readOnly: true,
+                score: function() {
+                         return $(this).attr('data-score');
+                       },
+            });
+        });
+    </script>
   </body>
 </html>

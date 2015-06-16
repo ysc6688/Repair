@@ -18,3 +18,4 @@
 //= require yeti/loader
 //= require yeti/bootswatch
 //= require sweet-alert
+//= require jquery.raty

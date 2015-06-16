@@ -1,23 +1,22 @@
-<% if notice == "报修单创建成功" %>
+<div class="bigbox">
+<% if notice == "报修单创建成功!" %>
     <div class="alert alert-success" role="alert"><%= notice %></div>
 <% end %>
-
-<div class="bigbox">
     <div class="panel panel-default">
-            <div class="alert alert-info" role="alert">报修单详情</div>
+        <div class="alert alert-info" role="alert" style="margin-bottom:2px">报修单详情</div>
     <table class="table">
         <tr>
-          <td>
+          <td width="20%">
             <strong>&nbsp;标&nbsp;&nbsp;题&nbsp;:</strong>
           </td>
-          <td>
+          <td width="30%">
             <%= @order.title %>
           </td>
 
-          <td>
+          <td width="20%">
             <strong>提交人:</strong>
           </td>
-          <td>
+          <td width="30">
             <%= @order.persion %>
           </td>
         </tr>
@@ -39,7 +38,7 @@
         </tr>
 
         <tr>
-          <td>
+            <td>
             <strong>故障类型:</strong>
           </td>
           <td>
@@ -73,6 +72,46 @@
         </tr>
     </table>
     </div>
+
+    <% if @order.status != "已提交" %>
+    <div class="panel panel-default">
+      <div class="alert alert-info" style="margin-bottom:2px" role="alert">维修情况:</div>
+      <table class="table">
+        <tr>
+          <td width="20%">
+            <strong>&nbsp;状&nbsp;&nbsp;态&nbsp;:</strong>
+          </td>
+          <td width="30%">
+            <%= @order.status %>
+          </td>
+
+          <td width="20%">
+            <strong>维修员:</strong>
+          </td>
+          <td width="30%">
+            <%= @order.repairman %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>维修建议:</strong>
+          </td>
+          <td colspan="3">
+            <%= @order.suggestion %>
+          </td>
+        </tr>
+    </table>
+    </div>
+    
+    <% end %>
+
+    <% if @order.status == "已评价" %>
+      <div class="alert alert-info" style="margin-bottom:2px" role="alert">总体评价:</div>
+      <div class="form-group", >
+          <div id="show_star" data-score="<%= @order.score %>"></div>
+      </div>
+
+    <% end %>
 
 <%= link_to '返回', orders_path, class: "btn btn-primary" %>
 </div>

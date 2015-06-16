@@ -13,7 +13,7 @@ class OrdersController < ApplicationController
         params[:order] = order_hash
         @order = Order.new(order_params)
         if @order.save
-            redirect_to @order, notice: '保修单创建成功!'
+            redirect_to @order, notice: '报修单创建成功!'
         else
             render 'new'
         end
@@ -33,7 +33,7 @@ class OrdersController < ApplicationController
         elsif current_user.role == 'root'
             @users = User.where("role = ? OR role = ?", 'manager', 'repairman')
         elsif current_user.role == 'manager'
-            @orders = Order.where("org = ? AND status = ?", current_user.org, '已提交')
+            @orders = Order.where("org = ?", current_user.org)
             @repairmans = User.where("role = ? AND org = ?", 'repairman', current_user.org)
         else
             @orders = Order.where("repairman = ?", current_user.username)
@@ -70,11 +70,44 @@ class OrdersController < ApplicationController
     end
 
     def suggest
-        @order = Order.new
+        @order = Order.find(params[:id])
+    end
+
+    def update
+        @order = Order.find(params[:id])
+        order_hash = params[:order]
+        @order.suggestion = order_hash[:suggestion]
+        @order.status = "已处理"
+        if @order.save
+            redirect_to @order
+        else
+            render 'suggest'
+        end
+    end
+
+    def comment
+        @order = Order.find(params[:id])
+    end
+
+    def update_comment
+        @order = Order.find(params[:id])
+        order_hash = params[:order]
+        @order.score = order_hash[:score]
+        @order.status = "已评价"
+
+        repairman = User.find_by(username: @order.repairman)
+        repairman.count += 1
+        repairman.score = (repairman.score * (repairman.count-1) + params[:order][:score].to_i) / repairman.count
+        repairman.save
+        if @order.save
+            redirect_to @order
+        else
+            render 'suggest'
+        end
     end
 
     private
     def order_params
-        params.require(:order).permit(:title, :persion, :phone, :email, :text, :org, :repairman, :suggestion, :status, :comment, :provider, :position)
+        params.require(:order).permit(:title, :persion, :phone, :email, :text, :org, :repairman, :suggestion, :status, :comment, :provider, :position, :score)
     end
 end

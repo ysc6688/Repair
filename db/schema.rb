@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150615044501) do
+ActiveRecord::Schema.define(version: 20150616080143) do
 
   create_table "orders", force: :cascade do |t|
     t.string   "title"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20150615044501) do
     t.string   "provider"
     t.string   "org"
     t.string   "position"
+    t.string   "score"
   end
 
   create_table "users", force: :cascade do |t|
@@ -46,6 +47,8 @@ ActiveRecord::Schema.define(version: 20150615044501) do
     t.string   "role"
     t.string   "email"
     t.string   "org"
+    t.integer  "count"
+    t.float    "score"
   end
 
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

@@ -88,19 +88,14 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
     });
 }
 </script>
-<h1>校园报修系统</h1>
 <% if user_signed_in? %>
 
   <% if current_user.role == 'student' %>
-    您好, <%= current_user.username %>! 您是 <%= current_user.role %> 用户
-  <%= link_to('登出', destroy_user_session_path, :method => :delete) %>
-  <%= link_to('修改密码', edit_user_registration_path, :method => :get) %>
-  <%= link_to('创建报修单', new_order_path, :method => :get) %>
 
 <div class="bigbox">
   <% if @orders.size > 0 %>
   <div class="panel panel-default">
-    <div class="alert alert-info" role="alert">您的报修单</div>
+    <div class="alert alert-info" role="alert" style="margin-bottom:2px">您的报修单</div>
     <table class="table">
       <tr>
         <th>#</th>
@@ -108,36 +103,42 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
         <th>创建时间</th>
         <th>状态</th>
         <th>更新时间</th>
+        <th>评价</th>
       </tr>
     <% @orders.each_with_index do |order,index| %>
       <tr>
         <td style="vertical-align:middle"><%= index+1 %></td>
-        <td><%= link_to order.title, order_path(order.id) %></td>
-        <td><%= order.created_at %></td>
-        <td><%= order.status %></td>
-        <td><%= order.updated_at %></td>
+        <td style="vertical-align:middle"><%= link_to order.title, order_path(order.id) %></td>
+        <td style="vertical-align:middle"><%= order.created_at %></td>
+        <td style="vertical-align:middle"><%= order.status %></td>
+        <td style="vertical-align:middle"><%= order.updated_at %></td>
+        <% if order.status == "已处理" %>
+            <td><%= link_to '立即评价', order_comment_path(order.id), class: "btn btn-primary btn-sm" %></td>
+        <% elsif order.status == "已评价" %>
+            <td style="vertical-align:middle;height:50px"><%= order.score %></td>
+        <% else %>
+            <td><%= link_to '待 处 理', order_comment_path(order.id), class: "btn btn-primary btn-sm", disabled: true %></td>
+        <% end %>
       </tr>
     <% end %>
     </table>
   </div>
   </div>
     <% elsif %>
-    <div class="alert alert-warning" role="alert">您还没有报修单</div>
+    <div class="alert alert-info" role="alert">您还没有报修单</div>
     <% end %>
   </div>
   </div>
   <% elsif current_user.role == 'manager' %>
-      您好, <%= current_user.username %>! 您是 <%= current_user.role %> 用户, 您所在的部门是<%= current_user.org =%>
-  <%= link_to('登出', destroy_user_session_path, :method => :delete) %>
-  <%= link_to('修改密码', edit_user_registration_path, :method => :get) %>
   <div class="bigbox">
   <% if @orders.size != 0 %>
   <div class="panel panel-default">
-    <div class="alert alert-info" role="alert">新提交的报修单</div>
+    <div class="alert alert-info" role="alert" style="margin-bottom:2px">新提交的报修单</div>
     <table class="table">
       <tr>
         <th>#</th>
         <th>标题</th>
+        <th>状态</th>
         <th>创建时间</th>
         <th>分配维修员</th>
       </tr>
@@ -145,14 +146,24 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
       <tr>
         <td style="vertical-align:middle"><%= index+1 %></td>
         <td style="vertical-align:middle"><%= link_to order.title, order_path(order.id) %></td>
+        <td style="vertical-align:middle"><%= order.status %></td>
         <td style="vertical-align:middle"><%= order.created_at %></td>
         <td>
+        <% if order.status == '已提交' %>
             <select class="form-control input-sm" id="alloc" onchange="if (this.selectedIndex) Alloc(<%= order.id %>,this);">
                 <option value="-1">请选择</option>
                 <% @repairmans.each do |rp| %>
                     <option value="<%=rp.username%>"><%= rp.username %></option>
                 <% end %>
             </select>
+        <% else %>
+            <select class="form-control input-sm" id="alloc" disabled="disabled">
+                <option value="-1">请选择</option>
+                <% @repairmans.each do |rp| %>
+                    <option value="<%=rp.username%>"><%= rp.username %></option>
+                <% end %>
+            </select>
+        <% end %>
         </td>
       </tr>
     <% end %>
@@ -160,16 +171,13 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
   </div>
   </div>
   <% else %>
-    <div class="alert alert-warning" role="alert">目前还没有报修单</div>
+    <div class="alert alert-info" role="alert">目前还没有报修单</div>
   <% end %>
   </div>
   <% elsif current_user.role == 'root' %>
-      您好, <%= current_user.username %>! 您是 <%= current_user.role %> 用户
-  <%= link_to('登出', destroy_user_session_path, :method => :delete) %>
-      <%= link_to '分配新账户', 'admin/new', :method => :get %>
   <div class="bigbox">
   <div class="panel panel-default">
-    <div class="alert alert-info" role="alert">管理员及维修员</div>
+    <div class="alert alert-info" role="alert" style="margin-bottom:2px">管理员及维修员</div>
     <table class="table">
       <tr>
         <th>#</th>
@@ -183,14 +191,13 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
     <% @users.each_with_index do |user,index| %>
       <tr>
         <td style="vertical-align:middle"><%= index+1 %></td>
-        <td><%= user.username %></td>
-        <td><%= user.created_at %></td>
-        <td><%= user.role %></td>
-        <td><%= user.org %></td>
-        <td><%= user.current_sign_in_at %>
-        <td><%= link_to '编辑', :controller => 'admin',
-            :action => 'edit', :name => user.username %>
-        <%= link_to '删除', admin_destroy_path(:name => user.username), :method => :delete, data: {confirm: '确定要删除吗?' }%></td>
+        <td style="vertical-align:middle"><%= user.username %></td>
+        <td style="vertical-align:middle"><%= user.created_at %></td>
+        <td style="vertical-align:middle"><%= user.role %></td>
+        <td style="vertical-align:middle"><%= user.org %></td>
+        <td style="vertical-align:middle"><%= user.current_sign_in_at %>
+        <td><%= link_to '编辑', admin_edit_path(:name => user.username) ,class: "btn btn-primary btn-sm" %>
+        <%= link_to '删除', admin_destroy_path(:name => user.username), :method => :delete, class:"btn btn-primary btn-sm", data: {confirm: '确定要删除吗?' }%></td>
       </tr>
     <% end %>
     </table>
@@ -198,28 +205,28 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
   </div>
   </div>
   <% else %>
-      您好, <%= current_user.username %>! 您是 <%= current_user.role %> 用户, 您所在的部门是 <%= current_user.org =%>
-  <%= link_to('登出', destroy_user_session_path, :method => :delete) %>
   <div class="bigbox">
     <% if @orders.size == 0 %>
-    <div class="alert alert-warning" role="alert">目前还没有要处理的报修单</div>
+    <div class="alert alert-info" role="alert">目前还没有要处理的报修单</div>
     <% else %>
     <div class="panel panel-default">
-        <div class="alert alert-info" role="alert">新分配的报修单</div>
+        <div class="alert alert-info" role="alert" style="margin-bottom:2px">新分配的报修单</div>
     <table class="table">
       <tr>
         <th>#</th>
         <th>标题</th>
         <th>创建时间</th>
-        <th>操作</th>
+        <th>状态</th>
         <th>流转到其他部门</th>
+        <th>操作/评价</th>
       </tr>
     <% @orders.each_with_index do |order, index| %>
       <tr>
         <td style="vertical-align:middle"><%= index+1 %></td>
         <td style="vertical-align:middle"><%= link_to order.title, order_path(order.id) %></td>
         <td style="vertical-align:middle"><%= order.created_at %></td>
-        <td style="vertical-align:middle"><%= link_to '提交意见', order_suggest_path(order.id), class: "btn btn-primary btn-sm" %></td>
+        <td style="vertical-align:middle"><%= order.status %></td>
+        <% if order.status == "已指派" %>
         <td>
             <select class="form-control input-sm" id="circle" onchange="if (this.selectedIndex) Circle(<%= order.id %>,this);">
                 <option value="-1">请选择</option>
@@ -231,6 +238,19 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
                 <% end %>
             </select>
         </td>
+        <td style="vertical-align:middle"><%= link_to '提交意见', order_suggest_path(order.id), class: "btn btn-primary btn-sm" %></td>
+        <% else %>
+        <td>
+            <select class="form-control input-sm" disabled="disabled">
+                <option value="-1">请选择</option>
+            </select>
+        </td>
+        <% if order.status == "已评价" %>
+            <td style="vertical-align:middle"><%= order.score %></td>
+        <% else %>
+            <td style="vertical-align:middle">未评价</td>
+        <% end %>
+        <% end %>
       </tr>
     <% end %>
     </table>

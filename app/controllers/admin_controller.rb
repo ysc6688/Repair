@@ -4,6 +4,11 @@ class AdminController < ApplicationController
     end
 
     def create
+        admin = params[:admin]
+        admin[:count] = 0
+        admin[:score] = 0.0
+        params[:admin] = admin
+        p admin
         @admin = User.new(admin_params)
         if @admin.save
             redirect_to '/'
@@ -36,6 +41,6 @@ class AdminController < ApplicationController
 
     private
     def admin_params
-        params.require(:admin).permit(:username, :password, :password_confirmation, :role, :org)
+        params.require(:admin).permit(:username, :password, :password_confirmation, :role, :org, :count, :score)
     end
 end
