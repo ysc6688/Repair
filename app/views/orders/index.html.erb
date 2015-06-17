@@ -158,7 +158,7 @@ swal({   title: "确定要流转到"+sel.value+"吗?",
             </select>
         <% else %>
             <select class="form-control input-sm" id="alloc" disabled="disabled">
-                <option value="-1">请选择</option>
+                <option value="-1"><%= order.repairman %></option>
                 <% @repairmans.each do |rp| %>
                     <option value="<%=rp.username%>"><%= rp.username %></option>
                 <% end %>

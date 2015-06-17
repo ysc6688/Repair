@@ -72,6 +72,9 @@
                 <% if current_user.org != nil%>
                 <li><a>org:<%= current_user.org %></a><li>
                 <% end %>
+                <% if current_user.role == 'repairman' %>
+                    <li><a>您的评分:<%= current_user.score %> / 5 </a></li>
+                <% end %>
                 <li><%= link_to('登出', destroy_user_session_path, :method => :delete) %></li>
             <% else %>
                 <li><a>您还没有登录，请登录</a></li>

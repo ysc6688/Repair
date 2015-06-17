@@ -78,6 +78,7 @@ class OrdersController < ApplicationController
         order_hash = params[:order]
         @order.suggestion = order_hash[:suggestion]
         @order.status = "已处理"
+        OrderMailer.repair_email(@order).deliver_now!
         if @order.save
             redirect_to @order
         else
@@ -108,6 +109,6 @@ class OrdersController < ApplicationController
 
     private
     def order_params
-        params.require(:order).permit(:title, :persion, :phone, :email, :text, :org, :repairman, :suggestion, :status, :comment, :provider, :position, :score)
+        params.require(:order).permit(:title, :persion, :phone, :email, :text, :org, :repairman, :suggestion, :status, :comment, :provider, :position, :score, :avatar)
     end
 end
