@@ -65,6 +65,16 @@
             <%= @order.position %>
           </td>
         </tr>
+        <tr>
+          <td>
+              <strong>&nbsp;附&nbsp;&nbsp;件&nbsp;:</strong>
+          </td>
+          <td colspan="3">
+            <% if @order.avatar_file_name != nil %>
+                <%= image_tag @order.avatar.url %>
+            <% end %>
+          </td>
+        </tr>
 
         <tr>
           <td>
