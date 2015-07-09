@@ -46,7 +46,7 @@ Rails.application.configure do
     :port => "25",
     :authentication => "login",
     :user_name => "yinshucheng8@163.com",
-    :password => "136137",
+    :password => "xxxxxx",
     :enable_starttls_auto => true
   }
 
